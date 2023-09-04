@@ -1,0 +1,17 @@
+@startuml
+Creditor -> Creditor_Agent: Set up p2p Beneficiary bank
+Creditor_Agent -> Switch: [p2p-01-1] Request
+Switch --> Creditor: Sent OTP to Creditor
+Switch --> Creditor_Agent: [p2p-01-1] Symc response
+Creditor_Agent -> Creditor: Provide OTP enter form
+Creditor --> Creditor_Agent: OTP enter
+Creditor_Agent -> Switch: [p2p-01-02] Request with OTP
+
+alt OTP Matched
+Switch -> Switch: Save Creditor to Creditor Agent link
+end 
+
+Switch --> Creditor_Agent: [p2p-01-02] Sync response
+Creditor_Agent --> Creditor: Set up p2p Beneficiary bank result response
+
+@enduml
