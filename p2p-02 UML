@@ -1,0 +1,6 @@
+@startuml
+Debtor -> Debtor_agent: Request to pay with Creditor Id
+Debtor_agent -> Switch: [p2p-02-1] GET Default Beneficiary bank
+Switch --> Debtor_agent: [p2p-02-1] GET Default Beneficiary bank Sync response
+Debtor_agent --> Debtor: Provide Default Beneficiary bank
+@enduml
