@@ -1,0 +1,29 @@
+@startuml
+
+Debtor -> Debtor_Agent: Confirm payment
+Debtor_Agent -> Switch: [p2p-05-1] POST Credit transfer request
+Switch --> Debtor_Agent: POST Credit transfer request sync response
+Switch -> Switch: Business Checks
+Switch -> Debtor_Agent: [p2p-05-2] POST Credit transfer Response
+Debtor_Agent --> Switch: POST Credit transfer Response sync response
+
+Switch -> Central_Bank: Request Customer Credit transfer
+Central_Bank --> Switch: Request Customer Credit transfer status Report
+
+Switch -> Debtor_Agent: [p2p-05-3] POST Request Payment Status Report
+Debtor_Agent --> Switch: POST Request Payment Status Report sync response
+
+alt Payment successfully completed
+Debtor_Agent --> Debtor: Success notification
+else Payment declined
+Debtor_Agent --> Debtor: Payment declined notification
+else Payment request timeout
+Debtor_Agent --> Debtor: Payment timeout notification
+Debtor_Agent -> Debtor_Agent: [p2p-06-1] Payment status request
+end 
+
+Switch -> Creditor_Agent: [p2p-05-4] POST Request Payment Status Report
+Creditor_Agent --> Switch: POST Request Payment Status Report sync response
+Creditor_Agent -> Creditor: Payment notification
+
+@enduml
