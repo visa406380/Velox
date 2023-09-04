@@ -1,0 +1,17 @@
+@startuml
+Creditor -> Creditor_Agent: Request to pay
+Creditor_Agent -> Switch: [p2p-03-1] POST Request Creditor Payment Activation
+Switch --> Creditor_Agent: [p2p-03-1] POST Request Creditor Payment Activation sync response
+Switch -> Debtor_Agent: [p2p-03-2] POST Request Creditor Payment Activation from Creditor Agent
+Debtor_Agent --> Switch: POST Request Creditor Payment Activation from Creditor Agent sync response
+Debtor_Agent -> Debtor_Agent: Client payment validation
+Alt Client exists
+Debtor_Agent -> Debtor: Payment request
+end
+Debtor_Agent -> Switch: [p2p-03-3] POST Request Creditor Payment Activation status Report from Debtor Agent
+Switch --> Debtor_Agent: POST Request Creditor Payment Activation status Report from Debtor Agent synce response
+Switch -> Creditor_Agent: [p2p-03-4] Request Creditor Payment Activation status Report
+Creditor_Agent --> Switch: Request Creditor Payment Activation status Report sync response
+Creditor_Agent --> Creditor: Request to pay response
+
+@enduml
