@@ -1,0 +1,23 @@
+@startuml
+
+Debtor -> Debtor_Agent: Initiate payment
+Debtor_Agent -> Switch: [p2p-04-1] POST Request Identity verification
+Switch --> Debtor_Agent: POST Request Identity verification sync response
+Switch -> Creditor_Agent: [p2p-04-2] POST Request Identity verification from Debtor Agent
+Creditor_Agent --> Switch: POST Request Identity verification from Debtor Agent sync response
+Creditor_Agent -> Creditor_Agent: Payment acceptance validation
+Creditor_Agent -> Switch: [p2p-04-3] POST Request with Identity verification result from Debtor Agent
+Switch --> Creditor_Agent: POST Request with Identity verification result from Debtor Agent sync response
+Switch -> Debtor_Agent: [p2p-04-4] POST Request with identity verification result
+Debtor_Agent --> Switch: POST Request with identity verification result sync response
+
+alt Ready to accpet Payment
+Debtor_Agent --> Debtor: Payment form display
+else not ready to accept paymant
+Debtor_Agent --> Debtor: Error message display
+else timeout response
+Debtor_Agent --> Debtor: Timeout message display
+end
+
+
+@enduml
