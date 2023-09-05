@@ -1,0 +1,990 @@
+openapi: 3.0.3
+info:
+  title: Switch Bank Gate 3.0
+  version: 0.0.1
+tags:
+  - name: Bank Gate
+    description: Bank Gate APIs for agents
+  - name: Bank Gate Internal
+    description: Bank Gate APIs for intermal ms
+  - name: Creditor agent
+    description: Creditor agent APIs
+  - name: Debtor agent
+    description: Debtor agent APIs
+
+paths:
+  /public-api/v1/p2p/default-bank/initialize:
+    post:
+      summary: "[p2p-01-1] Initialize setting the default beneficiary bank"
+      tags:
+        - Bank Gate
+      operationId: request-initialize-default-bank
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Member-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitializeDefaultBankRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InitializeDefaultBankResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '500':
+          description: Internal Server Error
+
+  /public-api/v1/p2p/default-bank/confirmation:
+    post:
+      summary: "[p2p-01-2] Confirmation with OTP of setting the default beneficiary bank"
+      tags:
+        - Bank Gate
+      operationId: request-confirmation-default-bank
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Member-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfirmationDefaultBankRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmationDefaultBankResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '500':
+          description: Internal Server Error
+
+  /public-api/v1/p2p/default-bank:
+    post:
+      summary: "[p2p-02-1] Get default beneficiary bank"
+      tags:
+        - Bank Gate
+      operationId: request-get-default-bank
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Member-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetDefaultBankRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDefaultBankResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '500':
+          description: Internal Server Error
+
+  /public-api/v1/p2p/identity-verification:
+    post:
+      summary: "[p2p-04-1] Request Identity verification"
+      tags:
+        - Bank Gate
+      operationId: request-identity-verification
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Member-Id"
+        - $ref: "#/components/parameters/X-Correlation-Id"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestIdentityVerificationFromDebtor'
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-Operation-Id:
+              $ref: "#/components/headers/X-Operation-Id"
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+          headers:
+            X-Operation-Id:
+              $ref: "#/components/headers/X-Operation-Id"
+        '500':
+          description: Internal Server Error
+
+  /creditor-agent/api/v1/p2p/identity-verification:
+    post:
+      summary: "[p2p-04-2] Request Identity verification to Creditor agent"
+      tags:
+        - Creditor agent
+      operationId: request-identity-verification-to-creditor-agent
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestIdentityVerification'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+  /public-api/v1/p2p/identity-verification-reply:
+    post:
+      summary: "[p2p-04-3] Request Identity verification reply"
+      tags:
+        - Bank Gate
+      operationId: request-identity-verification-reply
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Member-Id"
+        - $ref: "#/components/parameters/X-Correlation-Id"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestIdentityVerificationResultFromCreditor'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+  /debtor-agent/api/v1/p2p/identity-verification-reply:
+    post:
+      summary: "[p2p-04-4] Request Identity verification reply to Debtor agent"
+      tags:
+        - Debtor agent
+      operationId: request-identity-verification-reply-to-debtor-agent
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Correlation-Id"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestIdentityVerificationResultProxy'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+  /public-api/v1/p2p/payment:
+    post:
+      summary: "[p2p-05-1] Credit Transfer Request"
+      tags:
+        - Bank Gate
+      operationId: credit-transfer-request
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Member-Id"
+        - $ref: "#/components/parameters/X-Correlation-Id"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditTransferRequest'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+  /debtor-agent/api/v1/p2p/payment:
+    post:
+      summary: "[p2p-05-2] Credit Transfer Response"
+      tags:
+        - Debtor agent
+      operationId: credit-transfer-response
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Correlation-Id"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditTransferResponse'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+  /public-api/v1/p2p/operations/{operationId}:
+    get:
+      summary: "[p2p-06-1] Payment Status Request"
+      tags:
+        - Bank Gate
+      operationId: payment-status-request
+      parameters:
+        - $ref: "#/components/parameters/operationId"
+        - $ref: "#/components/parameters/X-Member-Id"
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentStatus'
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '500':
+          description: Internal Server Error
+          
+  /api/v1/p2p/operation-status-reply:
+    post:
+      summary: "Payment Status Reply to Agent"
+      tags:
+        - Bank Gate Internal
+      operationId: payment-status-reply-to-agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentStatusInternalRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultResponse'
+
+  /debtor-agent/api/v1/p2p/operation-status:
+    post:
+      summary: "Payment Status"
+      tags:
+        - Debtor agent
+      operationId: payment-status-debtor
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentStatus'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+  /creditor-agent/api/v1/p2p/operation-status:
+    post:
+      summary: "Payment Status"
+      tags:
+        - Creditor agent
+      operationId: payment-status-creditor
+      parameters:
+        - $ref: "#/components/parameters/X-Signature"
+        - $ref: "#/components/parameters/X-Message-Id"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentStatus'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Authentication Error
+        '403':
+          description: Signature error
+        '409':
+          description: Duplicate
+        '500':
+          description: Internal Server Error
+
+components:
+  parameters:
+    X-Member-Id:
+      name: X-Member-Id
+      in: header
+      required: true
+      description: "Идентификатор участника, проставляется в NGINX"
+      schema:
+        type: string
+    X-Signature:
+      name: X-Signature
+      in: header
+      required: true
+      description: "Какая то подпись в base64"
+      schema:
+        type: string
+    X-Correlation-Id:
+      name: X-Correlation-Id
+      in: header
+      required: true
+      description: "Идентификатор для связки асинхронных запроса и ответа - UUID"
+      schema:
+        type: string
+        format: uuid
+        minLength: 36
+        maxLength: 36
+        example: "d5aee433-f67b-412e-8192-deb921af8553"
+    X-Message-Id:
+      name: X-Message-Id
+      in: header
+      required: true
+      description: "Уникальный идентфиикатор сообщения, используется для отслеживания дубликатов"
+      schema:
+        type: string
+        format: uuid
+        minLength: 36
+        maxLength: 36
+        example: "dc083e53-820c-4e6c-9dd5-75686aa3477c"
+    operationId:
+      name: operationId
+      in: path
+      required: true
+      description: "Уникальный идентфиикатор операции"
+      schema:
+        type: string
+        format: uuid
+        minLength: 36
+        maxLength: 36
+        example: "dc083e53-820c-4e6c-9dd5-75686aa3477c"
+  headers:
+    X-Operation-Id:
+      required: true
+      description: "Идентификатор операции, назначенный Switch"
+      schema:
+        type: string
+        format: uuid
+        minLength: 36
+        maxLength: 36
+        example: "77a1880d-b359-4d1f-809d-9d2066044537"
+  
+  schemas:
+    RequestIdentityVerificationFromDebtor:
+      type: object
+      required:
+        - requestTime
+        - paymentData
+        - debtor
+        - debtorAgent
+        - creditor
+        - creditorAgent
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        paymentData:
+          $ref: '#/components/schemas/PaymentData'
+        debtor:
+          $ref: '#/components/schemas/UserFull'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditor:
+          $ref: '#/components/schemas/UserIdentificator'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+
+    RequestIdentityVerification:
+      type: object
+      required:
+        - requestTime
+        - operationId
+        - paymentData
+        - debtor
+        - debtorAgent
+        - creditor
+        - creditorAgent
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        operationId:
+          type: string
+          format: uuid
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        paymentData:
+          $ref: '#/components/schemas/PaymentData'
+        debtor:
+          $ref: '#/components/schemas/UserFull'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditor:
+          $ref: '#/components/schemas/UserIdentificator'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+
+    RequestIdentityVerificationResultFromCreditor:
+      type: object
+      required:
+        - requestTime
+        - operationId
+        - reasonCode
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        operationId:
+          type: string
+          format: uuid
+          minLength: 36
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        reasonCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+        creditor:
+          $ref: '#/components/schemas/UserFull'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+
+    RequestIdentityVerificationResultProxy:
+      type: object
+      required:
+        - requestTime
+        - operationId
+        - reasonCode
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        operationId:
+          type: string
+          format: uuid
+          minLength: 36
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        reasonCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+        creditor:
+          $ref: '#/components/schemas/UserFull'
+
+    PaymentData:
+      type: object
+      required:
+        - amount
+        - currency
+      properties:
+        amount:
+          type: integer
+          format: int64
+          example: 10000
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "UGX"
+
+    PaymentDataFull:
+      type: object
+      required:
+        - amount
+        - currency
+        - purpose
+      properties:
+        amount:
+          type: integer
+          format: int64
+          example: 10000
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: "UGX"
+        purpose:
+          type: string
+          maxLength: 255
+
+    UserIdentificator:
+      type: object
+      required:
+        - identification
+      properties:
+        identification:
+          $ref: '#/components/schemas/UserIdentification'
+
+    UserFull:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - postalAddress
+        - identification
+        - account
+      properties:
+        firstName:
+          type: string
+          example: 'Ivan'
+        lastName:
+          type: string
+          example: 'Ivanov'
+        middleName:
+          type: string
+          example: 'Petr'
+        postalAddress:
+          type: string
+          example: '24b Stretcher Rd, Kampala, Uganda'
+        identification:
+          $ref: '#/components/schemas/UserIdentificationFull'
+        account:
+          $ref: '#/components/schemas/Account'
+
+    Agent:
+      type: object
+      required:
+        - agentId
+      properties:
+        agentId:
+          type: string
+          example: '00000001'
+
+    UserIdentificationFull:
+      type: object
+      required:
+        - switchId
+        - identityDocument
+        - tin
+      properties:
+        switchId:
+          $ref: '#/components/schemas/SwitchId'
+        identityDocument:
+          $ref: '#/components/schemas/IdentityDocument'
+        tin:
+          type: string
+          example: '0123456789'
+          description: Tax Identification Number
+    
+    UserIdentification:
+      type: object
+      required:
+        - switchId
+      properties:
+        switchId:
+          $ref: '#/components/schemas/SwitchId'
+
+    Account:
+      type: object
+      required:
+        - number
+        - type
+      properties:
+        number:
+          type: string
+          example: '40800000000000000001'
+
+    SwitchId:
+      type: object
+      required:
+        - number
+        - type
+      properties:
+        number:
+          type: string
+          example: '0079991234567'
+        type:
+          type: string
+          example: "PHONE"
+
+    IdentityDocument:
+      type: object
+      required:
+        - number
+        - type
+      properties:
+        number:
+          type: string
+          example: '0079991234567'
+        type:
+          type: string
+          example: "NATIONAL_ID"
+    
+    InitializeDefaultBankRequest:
+      type: object
+      required:
+        - requestTime
+        - creditor
+        - creditorAgent
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        creditor:
+          $ref: '#/components/schemas/UserIdentificator'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+
+    InitializeDefaultBankResponse:
+      type: object
+      required:
+        - reasonCode
+      properties:
+        reasonCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+        operationId:
+          type: string
+          format: uuid
+          minLength: 36
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+
+    ConfirmationDefaultBankRequest:
+      type: object
+      required:
+        - requestTime
+        - creditorAgent
+        - operationId
+        - otp
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        operationId:
+          type: string
+          format: uuid
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        otp:
+          type: integer
+          format: int32
+          example: 123456
+
+    ConfirmationDefaultBankResponse:
+      type: object
+      required:
+        - reasonCode
+      properties:
+        reasonCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+
+    GetDefaultBankRequest:
+      type: object
+      required:
+        - requestTime
+        - debtor
+        - debtorAgent
+        - creditor
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        debtor:
+          $ref: '#/components/schemas/UserIdentificator'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditor:
+          $ref: '#/components/schemas/UserIdentificator'
+
+    GetDefaultBankResponse:
+      type: object
+      required:
+        - reasonCode
+      properties:
+        reasonCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+
+    CreditTransferRequest:
+      type: object
+      required:
+        - requestTime
+        - operationId
+        - paymentData
+        - debtor
+        - debtorAgent
+        - creditor
+        - creditorAgent
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        operationId:
+          type: string
+          format: uuid
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        paymentData:
+          $ref: '#/components/schemas/PaymentDataFull'
+        debtor:
+          $ref: '#/components/schemas/UserFull'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditor:
+          $ref: '#/components/schemas/UserFull'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+
+    CreditTransferResponse:
+      type: object
+      required:
+        - requestTime
+        - operationId
+        - reasonCode
+      properties:
+        requestTime:
+          type: string
+          format: date-time
+          description: "Дата и время формирования запроса в UTC"
+        operationId:
+          type: string
+          format: uuid
+          minLength: 36
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        reasonCode:
+          type: string
+          minLength: 6
+          maxLength: 6
+        operationState:
+          type: string
+          minLength: 6
+          maxLength: 6
+
+    UserShort:
+      type: object
+      required:
+        - identification
+      properties:
+        identification:
+          $ref: '#/components/schemas/UserIdentification'
+
+    DefaultResponse:
+      type: object
+      required:
+        - result
+        - data
+      properties:
+        result:
+          $ref: '#/components/schemas/Result'
+
+    Result:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          example: 'OK'
+
+    PaymentStatus:
+      type: object
+      required:
+        - operationId
+        - paymentData
+        - debtor
+        - debtorAgent
+        - creditor
+        - creditorAgent
+        - status
+      properties:
+        operationId:
+          type: string
+          format: uuid
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        paymentData:
+          $ref: '#/components/schemas/PaymentDataFull'
+        debtor:
+          $ref: '#/components/schemas/UserShort'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditor:
+          $ref: '#/components/schemas/UserShort'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        status:
+          type: string
+          example: 'RECEIVED'
+        finalReasonCode:
+          type: string
+
+    PaymentStatusInternalRequest:
+      type: object
+      required:
+        - meta
+        - operationId
+        - paymentData
+        - debtor
+        - debtorAgent
+        - creditor
+        - creditorAgent
+        - status
+      properties:
+        metaData:
+          $ref: '#/components/schemas/MetaData'
+        operationId:
+          type: string
+          format: uuid
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Operation Id"
+        paymentData:
+          $ref: '#/components/schemas/PaymentDataFull'
+        debtor:
+          $ref: '#/components/schemas/UserShort'
+        debtorAgent:
+          $ref: '#/components/schemas/Agent'
+        creditor:
+          $ref: '#/components/schemas/UserShort'
+        creditorAgent:
+          $ref: '#/components/schemas/Agent'
+        status:
+          type: string
+          example: 'RECEIVED'
+        finalReasonCode:
+          type: string
+
+    MetaData:
+      type: object
+      required:
+        - destinationAgentId
+        - senderAgentId
+        - messageId
+      properties:
+        destinationAgentId:
+          type: string
+          example: '00000001'
+        senderAgentId:
+          type: string
+          example: '00000001'
+        messageId:
+          type: string
+          format: uuid
+          maxLength: 36
+          example: "77a1880d-b359-4d1f-809d-9d2066044537"
+          description: "Message Id"
