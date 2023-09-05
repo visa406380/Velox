@@ -3,7 +3,7 @@
 Debtor_Agent -> Switch: [p2p-06-1] GET Payment status request
 Switch --> Debtor_Agent: GET Payment status request sync response
 
-Creditor_Agent -> Switch: [p2p-04-1] GET Request payment status 
+Creditor_Agent -> Switch: [p2p-06-1] GET Request payment status 
 Switch --> Creditor_Agent: GET Request payment status sync response
 
 @enduml
